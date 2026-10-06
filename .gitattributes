@@ -1,0 +1,44 @@
+# =============================================================
+#  Mods-Magia-DayZ — atributos de arquivo do Git
+#  Docs: https://git-scm.com/docs/gitattributes
+# =============================================================
+
+# Normaliza automaticamente os finais de linha (LF) nos arquivos de texto.
+# Evita ruído de CRLF/LF em commits entre Windows, Linux e macOS.
+* text=auto eol=lf
+
+# --- Código e conteúdo do site (GitHub Pages) ---
+*.html   text eol=lf
+*.htm    text eol=lf
+*.css    text eol=lf
+*.js     text eol=lf
+*.json   text eol=lf
+*.md     text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.txt    text eol=lf
+
+# --- Binários: nunca normalizar, nunca tentar diff de texto ---
+*.mp3    binary
+*.wav    binary
+*.ogg    binary
+*.flac   binary
+*.m4a    binary
+
+*.webp   binary
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.ico    binary
+*.svg    text eol=lf
+
+*.zip    binary
+*.7z     binary
+*.rar    binary
+
+# --- Estatísticas de linguagem do GitHub ---
+# O index.html é um app single-file com imagens embutidas em base64,
+# o que infla a contagem de "linguagem" do repositório. Isso mantém
+# a barra de linguagens mostrando apenas o que é realmente código.
+index.html linguist-generated=true
