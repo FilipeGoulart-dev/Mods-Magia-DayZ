@@ -31,11 +31,13 @@ no navegador. O deploy é feito automaticamente pelo GitHub Pages a cada push na
 | 📋 **Copiar ID / link** | Copia com um clique o Workshop ID ou o link do mod para colar no seu servidor |
 | ➕ **Montar o pack do servidor** | Marca mods com `+ Pack` e gera um resumo pronto para o admin |
 | ⭐ **Combo recomendado** | Seleciona automaticamente a combinação sugerida (6 mods essenciais) |
+| 🎵 **Trilha sonora automática** | `Narnia Lullaby Extended` toca ao abrir o guia, com fade-in e botão de pausar/retomar no HUD |
 | ✨ **Ambiente temático** | HUD estilo DayZ (mana, HP, sangue), partículas arcanas em canvas e efeitos ao clicar nos cards |
 
-> ℹ️ A seleção do pack fica **em memória**: recarregar a página limpa a seleção
-> (o projeto não usa `localStorage`). Use o botão de copiar do painel de exportação
-> para guardar o resultado.
+> ℹ️ A seleção do pack fica **em memória**: recarregar a página limpa a seleção.
+> Use o botão de copiar do painel de exportação para guardar o resultado.
+> A única preferência salva no `localStorage` é a da música (`dayz-guide-music`:
+> `on`/`off`), para não voltar a tocar depois que o visitante desliga.
 
 ---
 
@@ -46,7 +48,7 @@ Mods-Magia-DayZ/
 ├── index.html                              # 🌐 O site inteiro (HTML + CSS + JS + imagens)
 ├── assets/
 │   └── audio/
-│       └── narnia-lullaby-extended.mp3     # 🎵 Áudio de apoio (não usado pelo site hoje)
+│       └── narnia-lullaby-extended.mp3     # 🎵 Trilha sonora do guia (usada pelo index.html)
 ├── .gitattributes                          # Normalização de LF + arquivos binários
 ├── .gitignore                              # Lixo de SO, editores, builds, segredos
 ├── .nojekyll                               # Impede o Jekyll de processar o site no Pages
@@ -136,16 +138,40 @@ gerados automaticamente a partir desse array.
 
 ---
 
-## 🎵 Sobre o arquivo de áudio
+## 🎵 Trilha sonora automática
 
-`assets/audio/narnia-lullaby-extended.mp3` (~9,2 MB, ~10 min, 128 kbps) está no
-repositório como material de apoio, mas **não é referenciado pelo site** hoje — o
-`index.html` não carrega nenhum áudio. Se ele não for ser usado (por exemplo, como
-música de fundo), remova-o para deixar o clone bem mais leve:
+O guia toca `assets/audio/narnia-lullaby-extended.mp3` (~9,2 MB, 10 min, 128 kbps,
+em loop) **automaticamente ao abrir a página**, com fade-in suave até 55% do volume.
 
-```bash
-git rm assets/audio/narnia-lullaby-extended.mp3
-```
+### Como funciona
+
+| Etapa | Comportamento |
+| --- | --- |
+| 1ª tentativa | Toca direto com som, assim que a página carrega |
+| 2ª tentativa | Se o navegador bloquear o autoplay com som, toca **mudo** e mostra `🔇 Ativar Som` no botão |
+| Destrave | Na primeira interação do usuário (clique, tecla, toque ou rolagem), o som é ativado e o volume entra em fade |
+| Controle | O botão `🎵` no HUD (ao lado de *Conjurar Efeito Visual*) pausa e retoma a qualquer momento |
+| Memória | Quem desliga a música não a ouve de novo ao recarregar (`localStorage: dayz-guide-music = off`) |
+
+> ⚠️ **Limitação dos navegadores:** Chrome, Edge, Safari e Firefox só permitem áudio
+> automático *com som* em sites com histórico de interação ou em contexto de PWA
+> instalado. Em uma primeira visita, a música começa muda e liga no primeiro clique —
+> é uma política do navegador, não um bug do guia.
+
+### Personalizar
+
+- **Trocar a música:** coloque o novo arquivo em `assets/audio/` e atualize o `src` do
+  elemento `<audio id="bg-music">` (no fim do `index.html`).
+- **Mudar o volume:** ajuste `START_VOLUME` (padrão `0.55`) no bloco
+  `initBackgroundMusic`.
+- **Desligar de vez:** remova a tag `<audio id="bg-music" ...>` **e** o bloco
+  `<script> (function initBackgroundMusic() ...)` — sem eles o botão do HUD não aparece.
+- **Deixar o clone leve:** o arquivo é opcional; sem ele o guia continua funcional e o
+  botão mostra *Áudio indisponível*:
+
+  ```bash
+  git rm assets/audio/narnia-lullaby-extended.mp3
+  ```
 
 ---
 
